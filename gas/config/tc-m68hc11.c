@@ -225,6 +225,9 @@ static void s_m68hc11_relax (int);
 /* Pseudo op to control the ELF flags.  */
 static void s_m68hc11_mode (int);
 
+/* Pseudo op to suppress default warnings. */
+static void s_m68hc11_suppress_warnings (int);
+
 /* Mark the symbols with STO_M68HC12_FAR to indicate the functions
    are using 'rtc' for returning.  It is necessary to use 'call'
    to invoke them.  This is also used by the debugger to correctly
@@ -314,6 +317,9 @@ const pseudo_typeS md_pseudo_table[] =
   /* .interrupt instruction.  */
   {"interrupt", s_m68hc11_mark_symbol, STO_M68HC12_INTERRUPT},
 
+  /* .nobankwarning instruction.  */
+  {"nobankwarning", s_m68hc11_suppress_warnings, E_M68HC11_NO_BANK_WARNING},
+  //warning: banked address [fa:a000] (3fa000) is not in the same bank as current banked address [fe:8fd3] (408fd3)
   {0, 0, 0}
 };
 
@@ -4490,4 +4496,11 @@ m68hc11_elf_final_processing (void)
     elf_flags |= EF_M68HCS12_MACH;
   elf_elfheader (stdoutput)->e_flags &= ~EF_M68HC11_ABI;
   elf_elfheader (stdoutput)->e_flags |= elf_flags;
+}
+
+/* Suppress default warning messages */
+static void
+s_m68hc11_suppress_warnings (int warning)
+{
+  elf_flags |= warning;
 }
