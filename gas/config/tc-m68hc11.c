@@ -226,7 +226,7 @@ static void s_m68hc11_relax (int);
 static void s_m68hc11_mode (int);
 
 /* Pseudo op to suppress default warnings. */
-static void s_m68hc11_suppress_warnings (int);
+static void s_m68hc11_parse_pseudo_instruction (int);
 
 /* Mark the symbols with STO_M68HC12_FAR to indicate the functions
    are using 'rtc' for returning.  It is necessary to use 'call'
@@ -318,8 +318,8 @@ const pseudo_typeS md_pseudo_table[] =
   {"interrupt", s_m68hc11_mark_symbol, STO_M68HC12_INTERRUPT},
 
   /* .nobankwarning instruction.  */
-  {"nobankwarning", s_m68hc11_suppress_warnings, E_M68HC11_NO_BANK_WARNING},
-  //warning: banked address [fa:a000] (3fa000) is not in the same bank as current banked address [fe:8fd3] (408fd3)
+  {"nobankwarning", s_m68hc11_parse_pseudo_instruction, E_M68HC11_NO_BANK_WARNING},
+
   {0, 0, 0}
 };
 
@@ -4498,9 +4498,16 @@ m68hc11_elf_final_processing (void)
   elf_elfheader (stdoutput)->e_flags |= elf_flags;
 }
 
-/* Suppress default warning messages */
+/* Process directives specified via pseudo ops */
 static void
-s_m68hc11_suppress_warnings (int warning)
+s_m68hc11_parse_pseudo_instruction (int pseudo_insn)
 {
-  elf_flags |= warning;
+  switch (pseudo_insn)
+  {
+    case E_M68HC11_NO_BANK_WARNING:
+      elf_flags |= E_M68HC11_NO_BANK_WARNING;
+      break;
+    default:
+      as_bad (_("Invalid directive"));
+  }
 }
