@@ -1050,7 +1050,7 @@ elf32_m68hc11_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
              a LO8XG. Does not actually check that it was a LO8XG.
 	     Adjusts high and low bytes.  */
           relocation = phys_addr;
-          if ((elf_elfheader (input_bfd)->e_flags & E_M68HC11_XGATE_RAMOFFSET)
+          if ((e_flags & E_M68HC11_XGATE_RAMOFFSET)
 	      && (relocation >= 0x2000))
 	    relocation += 0xc000; /* HARDCODED RAM offset for XGATE.  */
 
