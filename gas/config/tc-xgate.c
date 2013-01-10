@@ -350,7 +350,10 @@ md_begin (void)
     }
 
   if (flag_print_opcodes == 1)
-    xgate_print_table ();
+    {
+      xgate_print_table ();
+      exit (EXIT_SUCCESS);
+    }
 }
 
 void
